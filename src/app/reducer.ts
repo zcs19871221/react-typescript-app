@@ -1,29 +1,44 @@
-import { handleActions } from 'redux-actions';
-import { SET_CHANNEL } from './actionType';
+import {
+  State,
+  Action,
+  SET_USER_NAME,
+  SET_USER_ID,
+  Key,
+  Reducer,
+  ReducerMap,
+} from './types';
 
-const Id = 'global';
-
-const defaultState = {};
-
-const setChannel = (state, { payload: channel }) => {
-  return {
-    ...state,
-    channel,
-  };
+const initialState: State = {
+  userName: '张成思',
+  userId: '',
 };
 
-export default {
-  [Id]: handleActions(
-    {
-      [SET_CHANNEL]: setChannel,
-    },
-    defaultState,
-  ),
+const globalReducer: Reducer = (state = initialState, action: Action) => {
+  switch (action.type) {
+    case SET_USER_NAME:
+      return {
+        ...state,
+        userId: action.payload,
+      };
+    case SET_USER_ID:
+      return {
+        ...state,
+        userId: action.payload,
+      };
+    default:
+      return state;
+  }
 };
-
-export const getGlobal = state => {
-  return state[Id];
+const reducerMap: ReducerMap = {
+  [Key]: globalReducer,
 };
-export const getChannel = state => {
-  return getGlobal(state).channel;
+export default reducerMap;
+export const getGlobal = (state: any): State => {
+  return state[Key];
+};
+export const getUserName = (state: any) => {
+  return getGlobal(state).userName;
+};
+export const getUserId = (state: any) => {
+  return getGlobal(state).userId;
 };

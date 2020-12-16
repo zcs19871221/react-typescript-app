@@ -2,58 +2,47 @@ import {
   createStore,
   applyMiddleware,
   compose,
-  bindActionCreators,
+  Store,
+  combineReducers,
 } from 'redux';
 import thunk from 'redux-thunk';
-import { isObject } from 'better-utils';
-import globalReducer from 'Src/app/reducer';
-import rootReducer from './rootReducer';
+import globalReducer from './app/reducer';
+import { ReducerMap } from './types';
 
-class Store {
+declare global {
+  interface Window {
+    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: any;
+  }
+}
+
+class ReduxStore {
+  private store: Store;
+  private reducers: ReducerMap = { ...globalReducer };
   constructor() {
-    this.store = null;
-    this.reducers = globalReducer;
-  }
-
-  saveStore2Local(store) {
-    try {
-      const serializedState = JSON.stringify(store.toJSON());
-      localStorage.setItem(this.cacheKey, serializedState);
-    } catch (jsonError) {
-      console.error(jsonError);
-    }
-  }
-
-  createStore() {
     this.store = createStore(
-      rootReducer(this.reducers),
-      {},
+      this.createReducer(),
       (window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose)(
         applyMiddleware(thunk),
       ),
     );
+  }
+
+  private createReducer() {
+    return combineReducers(this.reducers);
+  }
+
+  get() {
     return this.store;
   }
 
-  bindActions(creators) {
-    if (this.store) {
-      return bindActionCreators(creators, this.store.dispatch);
-    }
-    return null;
-  }
-
-  injectReducer(toInjectReducer) {
+  injectReducer(toInjectReducer: ReducerMap) {
     const { store } = this;
-    if (isObject(toInjectReducer)) {
-      this.reducers = {
-        ...this.reducers,
-        ...toInjectReducer,
-      };
-      store.replaceReducer(rootReducer(this.reducers));
-    } else {
-      console.error('注入reducer需要是对象,属性是reducer的key');
-    }
+    this.reducers = {
+      ...this.reducers,
+      ...toInjectReducer,
+    };
+    store.replaceReducer(this.createReducer());
   }
 }
 
-export default new Store();
+export default new ReduxStore();
