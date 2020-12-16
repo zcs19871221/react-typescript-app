@@ -1,0 +1,15 @@
+.wholeWrap {
+  display: flex;
+  flex-flow: row nowrap;
+  width: 100%;
+  height: calc(100% - 60px);
+  overflow: hidden;
+  background-color: #bcbcbc;
+}
+
+.wrap {
+  flex: auto;
+  overflow: auto;
+  height: 100%;
+  position: relative;
+}
