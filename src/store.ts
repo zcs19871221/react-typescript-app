@@ -6,7 +6,7 @@ import {
   combineReducers,
 } from 'redux';
 import thunk from 'redux-thunk';
-import globalReducer from './app/reducer';
+import globalReducer from './root/reducer';
 import { ReducerMap } from './types';
 
 declare global {

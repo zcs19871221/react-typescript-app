@@ -1,10 +1,10 @@
 import Loadable from 'react-loadable';
 import React from 'react';
 import { Spin } from 'antd';
-import store from 'Src/store';
-import { isDev } from 'Src/settings';
+import store from '../../store';
+import { isDev } from '../../settings';
 
-const Loading = props => {
+const Loading = (props: any) => {
   const { error, retry, timedOut } = props;
   if (error) {
     if (isDev) {
@@ -15,7 +15,7 @@ const Loading = props => {
           <div>
             <div>发现错误：</div>
             <div>
-              {error.stack.split('\n').map((stackErr, index) => (
+              {error.stack.split('\n').map((stackErr: any, index: number) => (
                 <div
                   key={`${stackErr + index}`}
                   style={{
@@ -50,7 +50,7 @@ const Loading = props => {
 };
 
 /* eslint-disable no-inline-comments,prefer-template */
-const dImport = (dir, componentKey, reducerKey) => {
+const dImport = (dir: string) => {
   const timeout = 5 * 1000;
   const delay = 300;
   return Loadable({
@@ -64,8 +64,8 @@ const dImport = (dir, componentKey, reducerKey) => {
     delay,
     loading: Loading,
     render: (loadedModules, props) => {
-      const Component = loadedModules[componentKey];
-      const reducer = loadedModules[reducerKey];
+      const Component = loadedModules.router;
+      const reducer = loadedModules.reducer;
       if (reducer) {
         store.injectReducer(reducer);
       }
