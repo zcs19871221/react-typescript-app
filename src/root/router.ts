@@ -14,7 +14,7 @@ interface Leaf extends BaseRoute {
 }
 
 type Route = Composite | Leaf;
-export type { Route };
+export type { Route, Leaf };
 export default class Router {
   private dirMapUrl: Map<string, string> = new Map();
   private dirs: string[] = [];

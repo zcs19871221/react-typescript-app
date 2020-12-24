@@ -23,18 +23,10 @@ class Nav extends React.PureComponent<
   };
 
   componentDidMount() {
+    this.setNav(this.props.location.pathname);
     this.props.history.listen((location) => {
       if (this.state.path !== location.pathname) {
-        const openMenus: string[] = [];
-        const content = this.props.tree.map((tree) =>
-          this.createMenu(tree, location.pathname, openMenus),
-        );
-        this.setState({
-          openMenus,
-          path: location.pathname,
-          selectedKeys: [location.pathname],
-          content,
-        });
+        this.setNav(location.pathname);
       }
     });
   }
@@ -65,9 +57,24 @@ class Nav extends React.PureComponent<
     });
   };
 
+  private setNav(url: string) {
+    const openMenus: string[] = [];
+    const content = this.props.tree.map((tree) =>
+      this.createMenu(tree, url, openMenus),
+    );
+    this.setState({
+      openMenus,
+      path: url,
+      selectedKeys: [url],
+      content,
+    });
+  }
+
   render() {
     return (
-      <div style={{ backgroundColor: '#001529', color: 'white' }}>
+      <div
+        style={{ backgroundColor: '#001529', color: 'white', width: '250px' }}
+      >
         <div className='product-nav'>
           <Menu
             mode='inline'

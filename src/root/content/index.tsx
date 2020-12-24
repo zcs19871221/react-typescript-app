@@ -19,16 +19,21 @@ export default class Content extends React.PureComponent<{ router: Router }> {
         <div className={style.wrap}>
           {
             <Switch>
-              {Object.entries(routes).map(([key, route]) => {
-                return (
-                  <Route
-                    exact={route.path === '/'}
-                    path={route.path}
-                    component={installModule(key)}
-                    key={key}
-                  />
-                );
-              })}
+              {routes
+                .map((route) => {
+                  if (route.type === 'leaf') {
+                    return (
+                      <Route
+                        exact={route.path === '/'}
+                        path={route.path}
+                        component={installModule(route.dir)}
+                        key={route.dir}
+                      />
+                    );
+                  }
+                  return null;
+                })
+                .filter(Boolean)}
               <Route component={NotFound} path='*' />
             </Switch>
           }

@@ -57,8 +57,7 @@ const dImport = (dir: string) => {
     loader: () =>
       import(
         /* webpackChunkName: "chunk-[request]" */
-        /* webpackPrefetch: true */
-        'Dom/' + dir + '/index.js'
+        'Dom/' + dir + '/index.ts'
       ),
     timeout,
     delay,
