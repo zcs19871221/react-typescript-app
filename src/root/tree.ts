@@ -1,7 +1,7 @@
-import { Route } from './router';
+import { MenuConfig } from './router';
 
 const base = '/';
-const tree: Route[] = [
+const fullTree: MenuConfig[] = [
   {
     path: 'test',
     name: '测试',
@@ -16,4 +16,4 @@ const tree: Route[] = [
     ],
   },
 ];
-export { tree, base };
+export { fullTree, base };

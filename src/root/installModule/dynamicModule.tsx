@@ -53,6 +53,7 @@ const Loading = (props: any) => {
 const dImport = (dir: string) => {
   const timeout = 5 * 1000;
   const delay = 300;
+  console.log(dir);
   return Loadable({
     loader: () =>
       import(

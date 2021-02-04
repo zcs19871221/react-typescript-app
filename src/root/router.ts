@@ -4,7 +4,7 @@ interface BaseRoute {
 }
 
 interface Composite extends BaseRoute {
-  child: Route[];
+  child: MenuConfig[];
   type: 'composite';
 }
 
@@ -13,32 +13,34 @@ interface Leaf extends BaseRoute {
   type: 'leaf';
 }
 
-type Route = Composite | Leaf;
-export type { Route, Leaf };
+type MenuConfig = Composite | Leaf;
+type RouteConfig = [string, string];
+export type { MenuConfig, Leaf, RouteConfig };
+
 export default class Router {
-  private dirMapUrl: Map<string, string> = new Map();
+  private dirUrls: RouteConfig[] = [];
   private dirs: string[] = [];
   private urls: string[] = [];
   private usedDirs: string[] | string = [];
   constructor(
-    private readonly routes: Route[],
+    private readonly routes: MenuConfig[],
     private readonly base: string = '/',
   ) {}
 
-  private buildLeaf(r: Leaf, url: string): Route[] {
+  private buildLeaf(r: Leaf, url: string): MenuConfig[] {
     const dir = r.dir;
     if (this.dirs.includes(dir)) {
       throw new Error(`dir不唯一:${dir}}`);
     }
     this.dirs.push(dir);
     if (this.usedDirs === 'all' || this.usedDirs.includes(dir)) {
-      this.dirMapUrl.set(dir, url);
+      this.dirUrls.push([dir, url]);
       return [{ ...r, path: url }];
     }
     return [];
   }
 
-  private buildComposite(r: Composite, url: string): Route[] {
+  private buildComposite(r: Composite, url: string): MenuConfig[] {
     const child = this.buildRoute(r.child, url);
     if (child.length === 0) {
       return [];
@@ -46,8 +48,8 @@ export default class Router {
     return [{ ...r, path: url, child }];
   }
 
-  private buildRoute(routes: Route[], base: string): Route[] {
-    return routes.reduce((acc: Route[], r) => {
+  private buildRoute(routes: MenuConfig[], base: string): MenuConfig[] {
+    return routes.reduce((acc: MenuConfig[], r) => {
       const url = `${base}/${r.path}`.replace(/\/+/gu, '/');
       if (this.urls.includes(url)) {
         throw new Error(`重复url:${url} path:${r.path}`);
@@ -69,11 +71,11 @@ export default class Router {
     }, []);
   }
 
-  build() {
-    this.dirMapUrl = new Map();
+  build(): [RouteConfig[], MenuConfig[]] {
+    this.dirUrls = [];
     this.dirs = [];
     this.urls = [];
-    return this.buildRoute(this.routes, this.base);
+    return [this.dirUrls, this.buildRoute(this.routes, this.base)];
   }
 
   setUsedDirs(dirs: string[] | 'all') {
