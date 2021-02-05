@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, NavLink } from 'react-router-dom';
 import { Menu } from 'antd';
 import urlAIncludeB from './urlAIncludeB';
 import { MenuConfig } from '../router';
@@ -7,23 +7,27 @@ import { MenuConfig } from '../router';
 const { SubMenu, Item } = Menu;
 const createMenu = (tree: MenuConfig, url: string, openMenus: string[]) => {
   if (tree.type === 'composite') {
-    if (urlAIncludeB(tree.path, url)) {
-      openMenus.push(url);
+    if (urlAIncludeB(url, tree.path)) {
+      openMenus.push(tree.path);
     }
     return (
-      <SubMenu>
+      <SubMenu key={tree.path}>
         {tree.child.map((e) => {
           return createMenu(e, url, openMenus);
         })}
       </SubMenu>
     );
   }
-  return null;
+  return (
+    <Item key={tree.path}>
+      <NavLink to={tree.path}>{tree.name}</NavLink>
+    </Item>
+  );
 };
 const Nav = ({ trees }: { trees: MenuConfig[] }) => {
   const [openMenus, setOpenMenus] = useState<any[]>([]);
   const [selectedKeys, setSelectedKeys] = useState<any[]>([]);
-  const [content, setContent] = useState<(JSX.Element | undefined)[]>(null);
+  const [content, setContent] = useState<(JSX.Element | null)[] | null>(null);
   const location = useLocation();
   useEffect(() => {
     const url = location.pathname;

@@ -13,6 +13,12 @@ const fullTree: MenuConfig[] = [
         dir: 'test',
         type: 'leaf',
       },
+      {
+        path: '2',
+        name: '测试2',
+        dir: 'test2',
+        type: 'leaf',
+      },
     ],
   },
 ];

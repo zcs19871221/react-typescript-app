@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter } from 'react-router-dom';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, BrowserRouter } from 'react-router-dom';
+import { Layout } from 'antd';
 import installModule from './installModule';
 import NotFound from './NotFound';
 import Nav from './Nav';
-import Header from './header';
+import HeaderContent from './header';
 import Router, { MenuConfig, RouteConfig } from './router';
 import { fullTree, base } from './tree';
 import style from './index.module.less';
 import { appName } from '../settings';
 import 'antd/dist/antd.css';
+
+const { Header, Content, Sider } = Layout;
 
 const Root = () => {
   const [config, setConfig] = useState<{
@@ -19,6 +21,7 @@ const Root = () => {
     routes: [],
     menus: [],
   });
+  const [collapsed, setCollapsed] = useState(false);
   useEffect(() => {
     const router = new Router(fullTree, base);
     router.setUsedDirs('all');
@@ -27,11 +30,15 @@ const Root = () => {
   }, []);
   return (
     <BrowserRouter>
-      <div className={style.wrapper}>
-        <Header userName='张成思' appName={appName} />
-        <div className={style.wholeWrap}>
-          <Nav tree={config.menus} />
-          <div className={style.wrap}>
+      <Layout className={style.wrapper}>
+        <Header>
+          <HeaderContent userName='张成思' appName={appName} />
+        </Header>
+        <Layout className={style.wholeWrap}>
+          <Sider collapsible collapsed={collapsed} onCollapse={setCollapsed}>
+            <Nav trees={config.menus} />
+          </Sider>
+          <Content className={style.wrap}>
             <Switch>
               {config.routes.map(([dir, path]) => (
                 <Route
@@ -43,9 +50,9 @@ const Root = () => {
               ))}
               <Route component={NotFound} path='*' />
             </Switch>
-          </div>
-        </div>
-      </div>
+          </Content>
+        </Layout>
+      </Layout>
     </BrowserRouter>
   );
 };
