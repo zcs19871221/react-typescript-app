@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import Root from './root';
 import { Provider } from 'react-redux';
 import store from './store';
+import ErrorBoundary from './error-boundary';
 import reportWebVitals from './reportWebVitals';
 
 (function main() {
@@ -11,7 +12,9 @@ import reportWebVitals from './reportWebVitals';
     ReactDOM.render(
       <React.StrictMode>
         <Provider store={store.get()}>
-          <Root />
+          <ErrorBoundary>
+            <Root />
+          </ErrorBoundary>
         </Provider>
       </React.StrictMode>,
       document.getElementById('root'),
