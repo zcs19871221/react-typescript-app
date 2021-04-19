@@ -38,7 +38,7 @@ const Nav = ({ trees }: { trees: MenuConfig[] }) => {
     setSelectedKeys([url]);
   }, [location.pathname, trees]);
   return (
-    <div style={{ backgroundColor: '#001529', color: 'white', width: '250px' }}>
+    <div style={{ backgroundColor: '#001529', color: 'white'}}>
       <div className='product-nav'>
         <Menu
           mode='inline'
