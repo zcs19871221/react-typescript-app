@@ -1,8 +1,8 @@
-import store from '../../store';
+import {injectReducer} from '../../store';
 
 const createComponentMap = () => {
   const context = (require as any).context('Dom/', true, /index\.js$/u);
-  const componentMap: { [key: string]: any } = {};
+  const componentMap: {[key: string]: any} = {};
   context.keys().forEach((str: string) => {
     const match = str.match(/^\.\/(.*?)\/index\.js$/u);
     if (match && match[1]) {
@@ -24,7 +24,7 @@ const getComponets = (dir: string) => {
   const Component = componentMap[dir].router;
   const reducer = componentMap[dir].reducer;
   if (reducer) {
-    store.injectReducer(reducer);
+    injectReducer(reducer);
   }
   return Component;
 };

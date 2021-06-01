@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, NavLink } from 'react-router-dom';
 import { Menu } from 'antd';
-import urlAIncludeB from './urlAIncludeB';
+import urlAIncludeB from './urla-include-b';
 import { MenuConfig } from '../router';
 
 const { SubMenu, Item } = Menu;

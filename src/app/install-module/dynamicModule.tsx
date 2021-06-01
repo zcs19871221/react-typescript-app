@@ -1,7 +1,7 @@
 import Loadable from 'react-loadable';
 import React from 'react';
 import { Spin } from 'antd';
-import store from '../../store';
+import {injectReducer} from '../../store';
 import { isDev } from '../../settings';
 
 const Loading = (props: any) => {
@@ -67,7 +67,7 @@ const dImport = (dir: string) => {
       const Component = loadedModules.router;
       const reducer = loadedModules.reducer;
       if (reducer) {
-        store.injectReducer(reducer);
+        injectReducer(reducer);
       }
       return <Component {...props} />;
     },

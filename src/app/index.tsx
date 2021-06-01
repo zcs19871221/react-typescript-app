@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Route, Switch, BrowserRouter } from 'react-router-dom';
 import { Layout } from 'antd';
-import installModule from './installModule';
-import NotFound from './NotFound';
-import Nav from './Nav';
+import installModule from './install-module';
+import NotFound from './not-found';
+import Nav from './nav';
 import HeaderContent from './header';
 import Router, { MenuConfig, RouteConfig } from './router';
 import { fullTree, base } from './tree';
-import style from './index.module.less';
+import { selectUser } from './common-slice';
 import { appName } from '../settings';
+import { useAppSelector } from '../store';
+import style from './index.module.less';
 import 'antd/dist/antd.css';
 
 const { Header, Content, Sider } = Layout;
@@ -28,11 +30,12 @@ const Root = () => {
     const [routes, menus] = router.build();
     setConfig({ routes, menus });
   }, []);
+  const user = useAppSelector(selectUser);
   return (
     <BrowserRouter>
       <Layout className={style.wrapper}>
         <Header>
-          <HeaderContent userName='张成思' appName={appName} />
+          <HeaderContent userName={user.userName} appName={appName} />
         </Header>
         <Layout className={style.wholeWrap}>
           <Sider collapsible collapsed={collapsed} onCollapse={setCollapsed}>

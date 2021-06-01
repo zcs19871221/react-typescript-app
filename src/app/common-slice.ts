@@ -1,12 +1,6 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState, AppThunk } from './store';
-import { fetchCount } from './counterAPI';
-
-export const key = 'common';
-export interface CommonState  {
-  userName: string,
-  userId: string,
-}
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {CommonState, key} from './types';
+import {selectByNameSpace, RootState} from '../store';
 
 const initialState: CommonState = {
   userName: '张成思',
@@ -31,12 +25,12 @@ export const commonSlice = createSlice({
   },
 });
 
-export const { setName, setUserId} = commonSlice.actions;
+export const {setName, setUserId} = commonSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
 // in the slice file. For example: `useSelector((state: RootState) => state.counter.value)`
-export const selectUserName = (state: RootState) => state.common;
-
+export const selectUser = (state: RootState) =>
+  selectByNameSpace(state, key);
 
 export default commonSlice.reducer;

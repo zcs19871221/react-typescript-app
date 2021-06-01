@@ -1,48 +1,50 @@
-import {
-  createStore,
-  applyMiddleware,
-  compose,
-  Store,
-  combineReducers,
-} from 'redux';
-import thunk from 'redux-thunk';
-import globalReducer from './app/reducer';
-import { ReducerMap } from './types';
+import {Reducer, AnyAction,combineReducers} from 'redux';
+import {configureStore, ThunkAction, Action} from '@reduxjs/toolkit';
+import {CommonState, key as CommonKey} from './app/types';
+import {TypedUseSelectorHook, useDispatch, useSelector,} from 'react-redux';
+import commonReducer from './app/common-slice';
 
-declare global {
-  interface Window {
-    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: any;
-  }
+interface ReducerMap {
+  [CommonKey]?: Reducer<CommonState, AnyAction>;
 }
 
-class ReduxStore {
-  private store: Store;
-  private reducers: ReducerMap = { ...globalReducer };
-  constructor() {
-    this.store = createStore(
-      this.createReducer(),
-      (window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose)(
-        applyMiddleware(thunk),
-      ),
+type NameSpaceKey = keyof  ReducerMap
+let reducerMap: ReducerMap = {
+  [CommonKey]: commonReducer,
+};
+
+const store = configureStore({
+  reducer: reducerMap,
+});
+
+export type AppDispatch = typeof store.dispatch;
+export type RootState = ReturnType<typeof store.getState>;
+export type AppThunk<ReturnType = void> = ThunkAction<
+  ReturnType,
+  RootState,
+  unknown,
+  Action<string>
+>;
+export const injectReducer = (toInjectReducer: ReducerMap) => {
+  reducerMap = {...reducerMap, ...toInjectReducer};
+  store.replaceReducer(combineReducers(reducerMap));
+};
+
+export function selectByNameSpace<T extends NameSpaceKey>(
+  state: RootState,
+  namespace: T
+): RootState[T] {
+  const namespaceState = state[namespace];
+  if (!namespaceState) {
+    throw new Error(
+      `Attempted to access state for an unregistered namespace at key ${namespace}`
     );
   }
-
-  private createReducer() {
-    return combineReducers(this.reducers);
-  }
-
-  get() {
-    return this.store;
-  }
-
-  injectReducer(toInjectReducer: ReducerMap) {
-    const { store } = this;
-    this.reducers = {
-      ...this.reducers,
-      ...toInjectReducer,
-    };
-    store.replaceReducer(this.createReducer());
-  }
+  // We need to explicitly say this is not undefined because TypeScript doesn't 
+  // recognize the thrown error will prevent us from ever getting here.
+  return namespaceState;
 }
 
-export default new ReduxStore();
+export const useAppDispatch = () => useDispatch<AppDispatch>();
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+export default store;

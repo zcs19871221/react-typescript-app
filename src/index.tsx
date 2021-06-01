@@ -11,7 +11,7 @@ import reportWebVitals from './reportWebVitals';
   try {
     ReactDOM.render(
       <React.StrictMode>
-        <Provider store={store.get()}>
+        <Provider store={store}>
           <ErrorBoundary>
             <Root />
           </ErrorBoundary>
