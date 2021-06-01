@@ -1,4 +1,4 @@
-import { ReducerMap as GlobalReducerMap } from './root/types';
+import { ReducerMap as GlobalReducerMap } from './app/types';
 
 export type FullState = GlobalReducerMap /* && XXReducerMap */;
 export type NameSpaceKey = keyof FullState;

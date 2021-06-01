@@ -1,7 +1,7 @@
 /// <reference path="./react-app-env.d.ts" />
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Root from './root';
+import Root from './app';
 import { Provider } from 'react-redux';
 import store from './store';
 import ErrorBoundary from './error-boundary';
