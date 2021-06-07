@@ -9,12 +9,12 @@ import React, { ErrorInfo } from 'react';
  */
 export default class GlobalErrorBoundary extends React.Component<
   any,
-  { hasError: Boolean; error?: Error; errorInfo?: ErrorInfo }
+  { hasError: Boolean; error: Error | null; errorInfo: ErrorInfo | null }
 > {
   state = {
     hasError: false,
-    error: undefined,
-    errorInfo: undefined,
+    error: null,
+    errorInfo: null,
   };
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
